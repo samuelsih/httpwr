@@ -86,7 +86,7 @@ func DefaultErrorHandler(w http.ResponseWriter, status int, err error) {
 	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
 
-	json.NewEncoder(w).Encode(errorResponse{
+	_ = json.NewEncoder(w).Encode(errorResponse{
 		Status: status,
 		Err:    err.Error(),
 	})
@@ -104,7 +104,7 @@ func OK(w http.ResponseWriter, status int, msg string) error {
 		Msg    string `json:"msg"`
 	}
 
-	json.NewEncoder(w).Encode(r{
+	_ = json.NewEncoder(w).Encode(r{
 		Status: status,
 		Msg:    msg,
 	})
@@ -124,7 +124,7 @@ func OKWithData(w http.ResponseWriter, status int, msg string, data M) error {
 		Data   M      `json:"data"`
 	}
 
-	json.NewEncoder(w).Encode(r{
+	_ = json.NewEncoder(w).Encode(r{
 		Status: status,
 		Msg:    msg,
 		Data:   data,
