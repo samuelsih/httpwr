@@ -31,7 +31,7 @@ Basic usages:
    func main() {
    	router := http.NewServeMux()
 
-   	router.Handle("/test", httpwr.NewF(func(w http.ResponseWriter, r *http.Request) error {
+   	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
    		err := someFunction()
    		return err
    	}))
@@ -55,7 +55,7 @@ Basic usages:
    func main() {
    	router := http.NewServeMux()
 
-   	router.Handle("/test", httpwr.NewF(func(w http.ResponseWriter, r *http.Request) error {
+   	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
    		err := someFunction()
    		return httpwr.Wrap(http.StatusBadRequest, err)
    	}))
@@ -75,7 +75,7 @@ Basic usages:
    func main() {
    	router := http.NewServeMux()
 
-      router.Handle("/test", httpwr.NewF(func(w http.ResponseWriter, r *http.Request) error {
+      router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
 		 if somethingWrong {
          return httpwr.Errorf(
             http.StatusBadRequest, 
@@ -99,7 +99,7 @@ Basic usages:
    func main() {
    	router := http.NewServeMux()
 
-   	router.Handle("/test", httpwr.NewF(func(w http.ResponseWriter, r *http.Request) error {
+   	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
    		return httpwr.OK(http.StatusOK, "all good")
    	}))
    }
@@ -118,7 +118,7 @@ Basic usages:
    func main() {
    	router := http.NewServeMux()
 
-   	router.Handle("/test", httpwr.NewF(func(w http.ResponseWriter, r *http.Request) error {
+   	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
    		data := M{"some": "data"}
          return httpwr.OKWithData(http.StatusOK, "all good", data)
    	}))

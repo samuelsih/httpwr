@@ -163,7 +163,14 @@ func NewFWithHandler(next HandlerFunc, eh ErrorHandler) http.Handler {
 }
 
 // NewF wraps a given http.HandlerFunc and return a http.Handler.
+// NOTE: use F instead of NewF
 func NewF(next HandlerFunc) http.Handler {
+	return New(next)
+}
+
+// F wraps a given http.HandlerFunc and return a http.Handler.
+// This is a short version of NewF.
+func F(next HandlerFunc) http.Handler {
 	return New(next)
 }
 

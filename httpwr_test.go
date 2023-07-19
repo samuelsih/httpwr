@@ -14,7 +14,7 @@ import (
 func TestServeNoError(t *testing.T) {
 	req := httptest.NewRequest("GET", "/test", nil)
 	w := httptest.NewRecorder()
-	NewF(func(w http.ResponseWriter, r *http.Request) error {
+	F(func(w http.ResponseWriter, r *http.Request) error {
 		return nil
 	}).ServeHTTP(w, req)
 	resp := w.Result()
@@ -29,7 +29,7 @@ func TestServeHTTPError(t *testing.T) {
 	w := httptest.NewRecorder()
 	status := http.StatusBadRequest
 	msg := "data was wrong"
-	NewF(func(w http.ResponseWriter, r *http.Request) error {
+	F(func(w http.ResponseWriter, r *http.Request) error {
 		return Error{
 			Status: status,
 			Err:    fmt.Errorf(msg),
@@ -53,7 +53,7 @@ func TestServeError(t *testing.T) {
 	req := httptest.NewRequest("GET", "/test", nil)
 	w := httptest.NewRecorder()
 	msg := "server is doing funky stuff"
-	NewF(func(w http.ResponseWriter, r *http.Request) error {
+	F(func(w http.ResponseWriter, r *http.Request) error {
 		return fmt.Errorf(msg)
 	}).ServeHTTP(w, req)
 	resp := w.Result()
@@ -152,7 +152,7 @@ func TestOK(t *testing.T) {
 
 	req := httptest.NewRequest("GET", "/test", nil)
 	w := httptest.NewRecorder()
-	NewF(func(w http.ResponseWriter, r *http.Request) error {
+	F(func(w http.ResponseWriter, r *http.Request) error {
 		return OK(w, http.StatusOK, msg)
 	}).ServeHTTP(w, req)
 	resp := w.Result()
@@ -180,7 +180,7 @@ func TestOKWithData(t *testing.T) {
 
 	req := httptest.NewRequest("GET", "/test", nil)
 	w := httptest.NewRecorder()
-	NewF(func(w http.ResponseWriter, r *http.Request) error {
+	F(func(w http.ResponseWriter, r *http.Request) error {
 		return OKWithData(w, http.StatusOK, msg, data)
 	}).ServeHTTP(w, req)
 	resp := w.Result()
@@ -214,7 +214,7 @@ func TestConstMessage(t *testing.T) {
 
 		req := httptest.NewRequest("GET", "/created", nil)
 		w := httptest.NewRecorder()
-		NewF(func(w http.ResponseWriter, r *http.Request) error {
+		F(func(w http.ResponseWriter, r *http.Request) error {
 			return OK(w, http.StatusCreated, msg)
 		}).ServeHTTP(w, req)
 		resp := w.Result()
@@ -237,7 +237,7 @@ func TestConstMessage(t *testing.T) {
 
 		req := httptest.NewRequest("GET", "/ok", nil)
 		w := httptest.NewRecorder()
-		NewF(func(w http.ResponseWriter, r *http.Request) error {
+		F(func(w http.ResponseWriter, r *http.Request) error {
 			return OK(w, http.StatusOK, msg)
 		}).ServeHTTP(w, req)
 		resp := w.Result()
@@ -260,7 +260,7 @@ func TestConstMessage(t *testing.T) {
 
 		req := httptest.NewRequest("GET", "/internalerr", nil)
 		w := httptest.NewRecorder()
-		NewF(func(w http.ResponseWriter, r *http.Request) error {
+		F(func(w http.ResponseWriter, r *http.Request) error {
 			return OK(w, http.StatusOK, msg)
 		}).ServeHTTP(w, req)
 		resp := w.Result()
@@ -283,7 +283,7 @@ func TestConstMessage(t *testing.T) {
 
 		req := httptest.NewRequest("GET", "/badrequest", nil)
 		w := httptest.NewRecorder()
-		NewF(func(w http.ResponseWriter, r *http.Request) error {
+		F(func(w http.ResponseWriter, r *http.Request) error {
 			return OK(w, http.StatusOK, msg)
 		}).ServeHTTP(w, req)
 		resp := w.Result()
