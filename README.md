@@ -48,27 +48,27 @@ func main() {
 
 2. Return error with status code
 
-   ```go
-   func someFunction() error {
-    return errors.New("error messages")
-   }
+```go
+func someFunction() error {
+ return errors.New("error messages")
+}
 
-   func main() {
-   	router := http.NewServeMux()
+func main() {
+	router := http.NewServeMux()
 
-   	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
-   		err := someFunction()
-   		return httpwr.Wrap(http.StatusBadRequest, err)
-   	}))
-   }
-   ```
+	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
+		err := someFunction()
+		return httpwr.Wrap(http.StatusBadRequest, err)
+	}))
+}
+```
 
-   ```json
-   {
-     "status": 400,
-     "error": "error messages"
-   }
-   ```
+```json
+{
+  "status": 400,
+  "error": "error messages"
+}
+```
 
 3. Return error with `errorf`:
 
