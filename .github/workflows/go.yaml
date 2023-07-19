@@ -1,0 +1,72 @@
+name: build
+
+on:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - 'v*'
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v4
+        name: Setup Go
+        with:
+          go-version: stable
+
+      - name: Go Mod Tidy
+        run: go mod tidy
+
+      - name: Get Test Coverage Badge
+        run: |
+          go test -failfast -race -coverprofile coverage.out ./...
+          
+          COVERAGE=`go tool cover -func=coverage.out | grep total: | grep -Eo '[0-9]+\.[0-9]+'`
+          
+          echo $COVERAGE
+          
+          COLOR=orange
+          
+          if (( $(echo "$COVERAGE <= 50" | bc -l) )) ; then
+            COLOR=red
+          elif (( $(echo "$COVERAGE > 80" | bc -l) )); then
+            COLOR=green
+          fi
+
+          curl "https://img.shields.io/badge/coverage-$COVERAGE%25-$COLOR" > badge.svg
+        
+      - uses: ncruces/go-coverage-report@v0
+        name: Build Badge
+        with:
+          report: 'true'
+          chart: 'true'
+          amend: 'false'
+        if: |
+          matrix.os == 'ubuntu-latest' &&
+          github.event_name == 'push'  
+        continue-on-error: true
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - uses: actions/setup-go@v4
+        name: Setup Go
+        with:
+          go-version: stable
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          skip-go-installation: true

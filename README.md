@@ -1,7 +1,6 @@
 # httpwr
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/samuelsih/httpwr/build.yaml?branch=master&style=for-the-badge)](https://github.com/samuelsih/httpwr/actions?workflow=build)
-[![Go Coverage](https://github.com/samuelsih/httpwr/wiki/coverage.svg)](https://raw.githack.com/wiki/samuelsih/httpwr/coverage.html)
 
 `httpwr` is an extended and modified version of this [repository](https://github.com/caarlos0/httperr).
 
