@@ -1,9 +1,9 @@
 # httpwr
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/samuelsih/httpwr/build.yaml?branch=master&style=for-the-badge)](https://github.com/samuelsih/httpwr/actions?workflow=build)
-[![Coverage Status](https://img.shields.io/codecov/c/gh/samuelsih/httpwr.svg?logo=codecov&style=for-the-badge)](https://codecov.io/gh/samuelsih/httpwr)
+[![Go Coverage](https://github.com/samuelsih/httpwr/wiki/coverage.svg)](https://raw.githack.com/wiki/samuelsih/httpwr/coverage.html)
 
-`httpwr` is an extended and modified version of this [repo](https://github.com/samuelsih/httpwr).
+`httpwr` is an extended and modified version of this [repository](https://github.com/caarlos0/httperr).
 
 The idea is still the same, that is to force the return type to the http handler, so we can minimize the risk of putting return state.
 
@@ -75,10 +75,13 @@ Basic usages:
    func main() {
    	router := http.NewServeMux()
 
-   	router.Handle("/test", httpwr.NewF(func(w http.ResponseWriter, r *http.Request) error {
-   		if somethingWrong {
-            return httpwr.Errorf(http.StatusBadRequest, "something wrong: %v", somethingWrong)
-        }
+      router.Handle("/test", httpwr.NewF(func(w http.ResponseWriter, r *http.Request) error {
+		 if somethingWrong {
+         return httpwr.Errorf(
+            http.StatusBadRequest, 
+            "something wrong: %v", somethingWrong,
+         )
+       }
    	}))
    }
    ```
@@ -116,9 +119,8 @@ Basic usages:
    	router := http.NewServeMux()
 
    	router.Handle("/test", httpwr.NewF(func(w http.ResponseWriter, r *http.Request) error {
-   		return httpwr.OKWithData(http.StatusOK, "all good", httpwr.M{
-            "some": "data",
-        })
+   		data := M{"some": "data"}
+         return httpwr.OKWithData(http.StatusOK, "all good", data)
    	}))
    }
    ```
