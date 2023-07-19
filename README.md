@@ -2,6 +2,7 @@
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/samuelsih/httpwr/go.yaml?branch=master&style=for-the-badge)](https://github.com/samuelsih/httpwr/actions?workflow=build)
 ![Coverage](https://github.com/samuelsih/httpwr/blob/master/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/samuelsih/httpwr)](https://goreportcard.com/report/github.com/samuelsih/httpwr)
 
 `httpwr` is an extended and modified version of this [repository](https://github.com/caarlos0/httperr).
 
