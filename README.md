@@ -1,6 +1,9 @@
 # httpwr
 
-`httpwr` stands for HTTP Wrapper. This is an extended and modified version of this [repo](https://github.com/caarlos0/httperr).
+[![Build Status](https://img.shields.io/github/actions/workflow/status/samuelsih/httpwr/build.yaml?branch=master&style=for-the-badge)](https://github.com/samuelsih/httpwr/actions?workflow=build)
+[![Coverage Status](https://img.shields.io/codecov/c/gh/samuelsih/httpwr.svg?logo=codecov&style=for-the-badge)](https://codecov.io/gh/samuelsih/httpwr)
+
+`httpwr` is an extended and modified version of this [repo](https://github.com/samuelsih/httpwr).
 
 The idea is still the same, that is to force the return type to the http handler, so we can minimize the risk of putting return state.
 
