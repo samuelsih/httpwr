@@ -24,27 +24,27 @@ Basic usages:
 
 1. Return error from handler
 
-   ```go
-   func someFunction() error {
-    return errors.New("error messages")
-   }
+```go
+func someFunction() error {
+	return errors.New("error messages")
+}
 
-   func main() {
-   	router := http.NewServeMux()
+func main() {
+	router := http.NewServeMux()
 
-   	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
-   		err := someFunction()
-   		return err
-   	}))
-   }
-   ```
+	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
+		err := someFunction()
+		return err
+	}))
+}
+```
 
-   ```json
-   {
-     "status": 500,
-     "error": "error messages"
-   }
-   ```
+```json
+{
+  "status": 500,
+  "error": "error messages"
+}
+```
 
 2. Return error with status code
 
@@ -72,68 +72,68 @@ Basic usages:
 
 3. Return error with `errorf`:
 
-   ```go
-   func main() {
-   	router := http.NewServeMux()
+```go
+func someFunction() error {
+	return errors.New("error messages")
+}
 
-      router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
-		 if somethingWrong {
-         return httpwr.Errorf(
-            http.StatusBadRequest, 
-            "something wrong: %v", somethingWrong,
-         )
-       }
-   	}))
-   }
-   ```
+func main() {
+	router := http.NewServeMux()
 
-   ```json
-   {
-     "status": 400,
-     "error": "something wrong: i dont know message"
-   }
-   ```
+	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
+		err := someFunction()
+		return httpwr.Wrap(http.StatusBadRequest, err)
+	}))
+}
+```
+
+```json
+{
+  "status": 400,
+  "error": "something wrong: i dont know message"
+}
+```
 
 4. No Error in handler? You can return `httpwr.OK`
 
-   ```go
-   func main() {
-   	router := http.NewServeMux()
+```go
+func main() {
+	router := http.NewServeMux()
 
-   	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
-   		return httpwr.OK(http.StatusOK, "all good")
-   	}))
-   }
-   ```
+	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
+		return httpwr.OK(http.StatusOK, "all good")
+	}))
+}
+```
 
-   ```json
-   {
-     "status": 200,
-     "msg": "all good"
-   }
+```json
+{
+  "status": 200,
+  "msg": "all good"
+}
    ```
 
 5. Want to return OK with Data? Use `httpwr.OKWithData`
 
-   ```go
-   func main() {
-   	router := http.NewServeMux()
+```go
+func main() {
+	router := http.NewServeMux()
 
-   	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
-   		data := M{"some": "data"}
-         return httpwr.OKWithData(http.StatusOK, "all good", data)
-   	}))
-   }
-   ```
+	router.Handle("/test", httpwr.F(func(w http.ResponseWriter, r *http.Request) error {
+		data := M{"some": "data"}
+		return httpwr.OKWithData(http.StatusOK, "all good", data)
+	}))
+}
+```
 
-   ```json
-   {
-     "status": 200,
-     "msg": "all good"
-     "data": {
-        "some": "data",
-     }
-   }
+```json
+{
+  "status": 200,
+  "msg": "all good"
+  "data": {
+     "some": "data",
+  }
+}
    ```
 
    `httpwr.M` is an alias for `map[string]any`
