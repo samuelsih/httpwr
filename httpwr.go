@@ -83,8 +83,8 @@ type ErrorHandler func(w http.ResponseWriter, status int, err error)
 // DefaultErrorHandler is the default error handler.
 // It converts the error to JSON and prints writes it to the response.
 func DefaultErrorHandler(w http.ResponseWriter, status int, err error) {
-	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
 
 	_ = json.NewEncoder(w).Encode(errorResponse{
 		Status: status,
@@ -96,8 +96,8 @@ func DefaultErrorHandler(w http.ResponseWriter, status int, err error) {
 // OK converts the status and message to JSON and sends it to user.
 // Also, it will write the header based on the status.
 func OK(w http.ResponseWriter, status int, msg string) error {
-	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
 
 	type r struct {
 		Status int    `json:"status"`
@@ -115,8 +115,8 @@ func OK(w http.ResponseWriter, status int, msg string) error {
 // OK converts the status, message and custom data you want to JSON.
 // Also, it will write the header based on the status.
 func OKWithData[T any](w http.ResponseWriter, status int, msg string, data T) error {
-	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
 
 	type r struct {
 		Status int    `json:"status"`

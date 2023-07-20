@@ -340,6 +340,32 @@ func TestHandlerFnWithError(t *testing.T) {
 	}
 }
 
+func TestHeaderJSON(t *testing.T) {
+	req := httptest.NewRequest("GET", "/json", nil)
+	w := httptest.NewRecorder()
+	status := http.StatusOK
+	msg := "something"
+	HandlerFn(func(w http.ResponseWriter, r *http.Request) error {
+		return OK(w, status, msg)
+	}).ServeHTTP(w, req)
+	resp := w.Result()
+	if resp.StatusCode != status {
+		t.Fatalf("expected http status %d, got %d", status, resp.StatusCode)
+	}
+
+	if resp.Header.Get("Content-Type") != "application/json" {
+		t.Fatalf("expected application/json, got %s", resp.Header.Get("Content-Type"))
+	}
+
+	bts, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatalf("got error: %v", err)
+	}
+	if !strings.Contains(string(bts), msg) {
+		t.Fatalf("%q does not contain %q", string(bts), msg)
+	}
+}
+
 func TestHandlerFnWithUnknownError(t *testing.T) {
 	req := httptest.NewRequest("GET", "/hf", nil)
 	w := httptest.NewRecorder()
