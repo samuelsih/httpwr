@@ -133,7 +133,7 @@ func OKWithData(w http.ResponseWriter, status int, msg string, data M) error {
 	return nil
 }
 
-// NewWithHandler() wraps a given http.Handler and returns a http.Handler.
+// NewWithHandler wraps a given http.Handler and returns a http.Handler.
 // You can also customize how the error is handled.
 func NewWithHandler(next Handler, eh ErrorHandler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -172,6 +172,30 @@ func NewF(next HandlerFunc) http.Handler {
 // This is a short version of NewF.
 func F(next HandlerFunc) http.Handler {
 	return New(next)
+}
+
+// CustomHandlerFn converts the httpwr.HandlerFunc into http.HandlerFunc with custom ErrorHandler.
+// Use this if you want to return http.HandlerFunc instead of http.Handler.
+func CustomHandlerFn(fn HandlerFunc, eh ErrorHandler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := fn(w, r)
+		if err == nil {
+			return
+		}
+
+		var herr Error
+		if errors.As(err, &herr) {
+			eh(w, herr.Status, herr.Err)
+		} else {
+			eh(w, http.StatusInternalServerError, err)
+		}
+	}
+}
+
+// HandlerFn converts the httpwr.HandlerFunc into http.HandlerFunc with default ErrorHandler.
+// Use this if you want to return http.HandlerFunc instead of http.Handler.
+func HandlerFn(fn HandlerFunc) http.HandlerFunc {
+	return CustomHandlerFn(fn, DefaultErrorHandler)
 }
 
 type errorResponse struct {

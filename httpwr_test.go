@@ -301,3 +301,65 @@ func TestConstMessage(t *testing.T) {
 		}
 	})
 }
+
+func TestHandlerFnNoError(t *testing.T) {
+	req := httptest.NewRequest("GET", "/hf", nil)
+	w := httptest.NewRecorder()
+	HandlerFn(func(w http.ResponseWriter, r *http.Request) error {
+		return nil
+	}).ServeHTTP(w, req)
+	resp := w.Result()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("expected http status ok, got %d", resp.StatusCode)
+	}
+}
+
+func TestHandlerFnWithError(t *testing.T) {
+	req := httptest.NewRequest("GET", "/hf", nil)
+	w := httptest.NewRecorder()
+	status := http.StatusBadRequest
+	msg := "data was wrong"
+	HandlerFn(func(w http.ResponseWriter, r *http.Request) error {
+		return Error{
+			Status: status,
+			Err:    fmt.Errorf(msg),
+		}
+	}).ServeHTTP(w, req)
+	resp := w.Result()
+	if resp.StatusCode != status {
+		t.Fatalf("expected http status %d, got %d", status, resp.StatusCode)
+	}
+
+	bts, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatalf("got error: %v", err)
+	}
+	if !strings.Contains(string(bts), msg) {
+		t.Fatalf("%q does not contain %q", string(bts), msg)
+	}
+}
+
+func TestHandlerFnWithUnknownError(t *testing.T) {
+	req := httptest.NewRequest("GET", "/hf", nil)
+	w := httptest.NewRecorder()
+	status := http.StatusInternalServerError
+
+	msg := "something was wrong"
+
+	HandlerFn(func(w http.ResponseWriter, r *http.Request) error {
+		return errors.New(msg)
+	}).ServeHTTP(w, req)
+	resp := w.Result()
+	if resp.StatusCode != status {
+		t.Fatalf("expected http status %d, got %d", status, resp.StatusCode)
+	}
+
+	bts, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatalf("got error: %v", err)
+	}
+	if !strings.Contains(string(bts), msg) {
+		t.Fatalf("%q does not contain %q", string(bts), msg)
+	}
+}
