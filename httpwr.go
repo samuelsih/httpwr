@@ -114,14 +114,14 @@ func OK(w http.ResponseWriter, status int, msg string) error {
 
 // OK converts the status, message and custom data you want to JSON.
 // Also, it will write the header based on the status.
-func OKWithData(w http.ResponseWriter, status int, msg string, data M) error {
+func OKWithData[T any](w http.ResponseWriter, status int, msg string, data T) error {
 	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
 
 	type r struct {
 		Status int    `json:"status"`
 		Msg    string `json:"msg"`
-		Data   M      `json:"data"`
+		Data   T      `json:"data"`
 	}
 
 	_ = json.NewEncoder(w).Encode(r{
